@@ -13,13 +13,23 @@ namespace BPM_Editor
 {
     public partial class Form1 : Form
     {
+        private string songsFolder = "";
         private Beatmap selectedBeatmap = null;
+        private List<string> difficulties = new List<string>();
+        private List<string> difficultyNames = new List<string>();
         private List<String> hitObjects = new List<string>();
         private List<String> newHitObjects = new List<string>();
+
         private byte TITLE_MASK = 1;
         private byte ARTIST_MASK = 2;
         private byte SOURCE_MASK = 4;
         private byte VERSION_MASK = 8;
+        private byte CREATOR_MASK = 16;
+
+        private byte OD_MASK = 1;
+        private byte AR_MASK = 2;
+        private byte CS_MASK = 4;
+        private byte HP_MASK = 8;
 
         private byte TYPE_CIRCLE = 1;
         private byte TYPE_SLIDER = 2;
@@ -32,22 +42,6 @@ namespace BPM_Editor
         public Form1()
         {
             InitializeComponent();
-        }
-
-        private void cmdSelectBeatmap_Click(object sender, EventArgs e)
-        {
-            // Show dialog
-            DialogResult dr = ofdSelectBeatmap.ShowDialog();
-            if (dr == System.Windows.Forms.DialogResult.OK)
-            {
-                // Check extension ending
-                string extension = Path.GetExtension(ofdSelectBeatmap.FileName);
-                if (extension.ToLower() == ".osu")
-                {
-                    // Parse beatmap for metadata
-                    ParseBeatmapFile(ofdSelectBeatmap.FileName);
-                }
-            }
         }
 
         private void cmdSave_Click(object sender, EventArgs e)
@@ -114,7 +108,6 @@ namespace BPM_Editor
 
             return newSpinner;
         }
-
         private void AdjustHitObjects(float oldBpm, float newBpm, List<string> oldHitObjects, List<string> newHitObjects)
         {
             // Reading hitobjects
@@ -139,8 +132,6 @@ namespace BPM_Editor
                     AdjustSpinner(oldBpm, newBpm, tokens);
                 }
             }
-
-            lbNewHitObjects.DataSource = newHitObjects;
         }
 
         private void WriteBeatmapFile(string pathAndFileName, List<String> lines)
@@ -168,8 +159,10 @@ namespace BPM_Editor
                 {
                     string line;
                     bool readingMetadata = true;
-                    byte dataFound = 0;
 
+                    // Metadata checksum
+                    int dataFound = 0;
+                    int difficultyDataFound = 0;
 
                     while ((line = sr.ReadLine()) != null)
                     {
@@ -191,22 +184,47 @@ namespace BPM_Editor
                                     if (((dataFound & TITLE_MASK) == 0) && key.Contains("Title"))
                                     {
                                         selectedBeatmap.Title = value;
-                                        dataFound |= 1 << 0;
+                                        dataFound |= TITLE_MASK;
                                     }
                                     else if (((dataFound & ARTIST_MASK) == 0) && key.Contains("Artist"))
                                     {
                                         selectedBeatmap.Artist = value;
-                                        dataFound |= 1 << 1;
+                                        dataFound |= ARTIST_MASK;
                                     }
                                     else if (((dataFound & SOURCE_MASK) == 0) && key.Contains("Source"))
                                     {
                                         selectedBeatmap.Source = value;
-                                        dataFound |= 1 << 2;
+                                        dataFound |= SOURCE_MASK;
                                     }
                                     else if (((dataFound & VERSION_MASK) == 0) && key.Contains("Version"))
                                     {
                                         selectedBeatmap.Version = value;
-                                        dataFound |= 1 << 3;
+                                        dataFound |= VERSION_MASK;
+                                    }
+                                    else if (((dataFound & CREATOR_MASK) == 0) && key.Contains("Creator"))
+                                    {
+                                        selectedBeatmap.Creator = value;
+                                        dataFound |= CREATOR_MASK;
+                                    }
+                                    else if (((difficultyDataFound & OD_MASK) == 0) && key.Contains("OverallDifficulty"))
+                                    {
+                                        selectedBeatmap.OverallDifficulty = float.Parse(value);
+                                        difficultyDataFound |= OD_MASK;
+                                    }
+                                    else if (((difficultyDataFound & AR_MASK) == 0) && key.Contains("ApproachRate"))
+                                    {
+                                        selectedBeatmap.ApproachRate = float.Parse(value);
+                                        difficultyDataFound |= AR_MASK;
+                                    }
+                                    else if (((difficultyDataFound & CS_MASK) == 0) && key.Contains("CircleSize"))
+                                    {
+                                        selectedBeatmap.CircleSize = float.Parse(value);
+                                        difficultyDataFound |= CS_MASK;
+                                    }
+                                    else if (((difficultyDataFound & HP_MASK) == 0) && key.Contains("HPDrainRate"))
+                                    {
+                                        selectedBeatmap.HPDrainRate = float.Parse(value);
+                                        difficultyDataFound |= HP_MASK;
                                     }
                                 }
                             }
@@ -218,9 +236,6 @@ namespace BPM_Editor
                         }
                     }
 
-                    // Consolidate data found
-                    // lblSelectedBeatmap: {Source} ({Artist}) - {Title} [{Version}]
-                    lbHitObjects.DataSource = hitObjects;
                 }
             }
             catch (Exception e)
@@ -228,12 +243,105 @@ namespace BPM_Editor
                 Console.WriteLine(e.Message);
             }
 
-            // Read metadata
-            //lblSelectedBeatmap.Text = ofdSelectBeatmap.FileName;
+            // Update UI with data
+            UpdateUI();
+        }
+
+        private void UpdateUI()
+        {
+            // Metadata
             lblSelectedBeatmap.Text = selectedBeatmap.Source + " (" +
                 selectedBeatmap.Artist + ") - " +
                 selectedBeatmap.Title + " [" +
                 selectedBeatmap.Version + "]";
+
+            lblCreator.Text = selectedBeatmap.Creator;
+            tbCreator.Text = selectedBeatmap.Creator;
+            tbDifficultyName.Text = selectedBeatmap.Version;
+
+            // Difficulty
+            tbOD.Text = selectedBeatmap.OverallDifficulty.ToString();
+            tbAR.Text = selectedBeatmap.ApproachRate.ToString();
+            tbCS.Text = selectedBeatmap.CircleSize.ToString();
+            tbHPDrain.Text = selectedBeatmap.HPDrainRate.ToString();
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void openFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Show dialog
+            DialogResult dr = ofdSelectBeatmap.ShowDialog();
+            if (dr == System.Windows.Forms.DialogResult.OK)
+            {
+                // Check extension ending
+                string extension = Path.GetExtension(ofdSelectBeatmap.FileName);
+                if (extension.ToLower() == ".osu")
+                {
+                    // Parse beatmap for metadata
+                    ParseBeatmapFile(ofdSelectBeatmap.FileName);
+                }
+            }
+        }
+
+        private void setSongDirectoryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Show dialog
+            DialogResult dr = fbdSongs.ShowDialog();
+            if (dr == System.Windows.Forms.DialogResult.OK)
+            {
+                songsFolder = fbdSongs.SelectedPath;
+                ProcessSongsFolder(songsFolder);
+            }
+        }
+
+        private void ProcessSongsFolder(string path)
+        {
+            // Get a collection of folder names for the list box
+            List<string> beatmapFolders = new List<string>(Directory.EnumerateDirectories(path).Select(folder => new DirectoryInfo(folder).Name));
+            lbBeatmaps.DataSource = beatmapFolders;
+            lbBeatmaps.SelectedIndex = 0;
+        }
+
+        private void lbBeatmaps_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateDifficulties();
+        }
+
+        private void UpdateDifficulties()
+        {
+            string difficultiesPath = songsFolder + Path.DirectorySeparatorChar + lbBeatmaps.GetItemText(lbBeatmaps.SelectedItem);
+            
+            difficulties = new List<string>(Directory.EnumerateFiles(difficultiesPath).
+                Select(file => new DirectoryInfo(file).Name).
+                Where(file => Path.GetExtension(file).Contains(".osu")));
+
+            difficultyNames = new List<string>(difficulties);
+
+            ProcessDifficultiesForUI();
+        }
+
+        private void ProcessDifficultiesForUI()
+        {
+            for (int i = 0; i < difficulties.Count; i++)
+            {
+                string difficulty = difficulties[i];
+                int indexOfOpenBrace = difficulty.IndexOf('[');
+                int indexOfCloseBrace = difficulty.IndexOf(']') + 1;
+                difficulties[i] = difficulty.Substring(indexOfOpenBrace, indexOfCloseBrace - indexOfOpenBrace);
+            }
+
+            lbDifficulties.DataSource = difficulties;
+        }
+
+        private void lbDifficulties_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ParseBeatmapFile(songsFolder + Path.DirectorySeparatorChar +
+                lbBeatmaps.GetItemText(lbBeatmaps.SelectedItem) + Path.DirectorySeparatorChar + 
+                difficultyNames[lbDifficulties.SelectedIndex]);
         }
     }
 }

@@ -48,11 +48,11 @@ namespace BPM_Editor
             set { version = value; }
         }
 
-        private string difficulty;
-        public string Difficulty
+        private string creator;
+        public string Creator
         {
-            get { return difficulty; }
-            set { difficulty = value; }
+            get { return creator; }
+            set { creator = value; }
         }
 
         private string mapper;
@@ -77,11 +77,11 @@ namespace BPM_Editor
         }
 
         // Difficulty
-        private float circleSize;
-        public float CircleSize
+        private float overallDifficulty;
+        public float OverallDifficulty
         {
-            get { return circleSize; }
-            set { circleSize = value; }
+            get { return overallDifficulty; }
+            set { overallDifficulty = value; }
         }
 
         private float approachRate;
@@ -89,6 +89,13 @@ namespace BPM_Editor
         {
             get { return approachRate; }
             set { approachRate = value; }
+        }
+
+        private float circleSize;
+        public float CircleSize
+        {
+            get { return circleSize; }
+            set { circleSize = value; }
         }
 
         private float hpDrainRate;
@@ -105,6 +112,7 @@ namespace BPM_Editor
             set { starRating = value; }
         }
 
+        // Additional
         private int circleCount;
         public int CircleCount
         {
@@ -130,7 +138,7 @@ namespace BPM_Editor
         {
             FileAddr = "";
             FileName = "";
-            Difficulty = "";
+            Version = "";
             Mapper = "";
             BPM = 0.0f;
             ObjectCount = 0;
@@ -138,7 +146,6 @@ namespace BPM_Editor
             ApproachRate = 0.0f;
             HPDrainRate = 0.0f;
             StarRating = 0.0f;
-
         }
     }
 }
