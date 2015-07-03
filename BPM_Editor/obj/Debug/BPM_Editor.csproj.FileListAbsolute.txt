@@ -1,0 +1,9 @@
+c:\users\alexander\documents\visual studio 2013\Projects\BPM_Editor\BPM_Editor\bin\Debug\BPM_Editor.exe.config
+c:\users\alexander\documents\visual studio 2013\Projects\BPM_Editor\BPM_Editor\bin\Debug\BPM_Editor.exe
+c:\users\alexander\documents\visual studio 2013\Projects\BPM_Editor\BPM_Editor\bin\Debug\BPM_Editor.pdb
+c:\users\alexander\documents\visual studio 2013\Projects\BPM_Editor\BPM_Editor\obj\Debug\BPM_Editor.csprojResolveAssemblyReference.cache
+c:\users\alexander\documents\visual studio 2013\Projects\BPM_Editor\BPM_Editor\obj\Debug\BPM_Editor.Form1.resources
+c:\users\alexander\documents\visual studio 2013\Projects\BPM_Editor\BPM_Editor\obj\Debug\BPM_Editor.Properties.Resources.resources
+c:\users\alexander\documents\visual studio 2013\Projects\BPM_Editor\BPM_Editor\obj\Debug\BPM_Editor.csproj.GenerateResource.Cache
+c:\users\alexander\documents\visual studio 2013\Projects\BPM_Editor\BPM_Editor\obj\Debug\BPM_Editor.exe
+c:\users\alexander\documents\visual studio 2013\Projects\BPM_Editor\BPM_Editor\obj\Debug\BPM_Editor.pdb
