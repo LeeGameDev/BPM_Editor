@@ -5,7 +5,7 @@ namespace BPM_Editor
 {
     class Beatmap
     {
-        // General Metadata
+        #region Metadata
         private string fileAddr;
         public string FileAddr
         {
@@ -62,13 +62,45 @@ namespace BPM_Editor
             set { mapper = value; }
         }
 
-        private float bpm;
-        public float BPM
+        private decimal bpm;
+        public decimal BPM
         {
             get { return bpm; }
             set { bpm = value; }
         }
+        #endregion
 
+        #region Difficulty
+        private decimal overallDifficulty;
+        public decimal OD
+        {
+            get { return overallDifficulty; }
+            set { overallDifficulty = value; }
+        }
+
+        private decimal approachRate;
+        public decimal AR
+        {
+            get { return approachRate; }
+            set { approachRate = value; }
+        }
+
+        private decimal circleSize;
+        public decimal CS
+        {
+            get { return circleSize; }
+            set { circleSize = value; }
+        }
+
+        private decimal hpDrainRate;
+        public decimal HP
+        {
+            get { return hpDrainRate; }
+            set { hpDrainRate = value; }
+        }
+        #endregion
+
+        #region Additional
         private int objectCount;
         public int ObjectCount
         {
@@ -76,43 +108,6 @@ namespace BPM_Editor
             set { objectCount = value; }
         }
 
-        // Difficulty
-        private float overallDifficulty;
-        public float OverallDifficulty
-        {
-            get { return overallDifficulty; }
-            set { overallDifficulty = value; }
-        }
-
-        private float approachRate;
-        public float ApproachRate
-        {
-            get { return approachRate; }
-            set { approachRate = value; }
-        }
-
-        private float circleSize;
-        public float CircleSize
-        {
-            get { return circleSize; }
-            set { circleSize = value; }
-        }
-
-        private float hpDrainRate;
-        public float HPDrainRate
-        {
-            get { return hpDrainRate; }
-            set { hpDrainRate = value; }
-        }
-
-        private float starRating;
-        public float StarRating
-        {
-            get { return starRating; }
-            set { starRating = value; }
-        }
-
-        // Additional
         private int circleCount;
         public int CircleCount
         {
@@ -133,19 +128,29 @@ namespace BPM_Editor
             get { return spinnerCount; }
             set { spinnerCount = value; }
         }
+        #endregion
 
         public void ClearData()
         {
+            // Metadata
             FileAddr = "";
             FileName = "";
+            Title = "";
+            Artist = "";
+            Source = "";
             Version = "";
+            Creator = "";
             Mapper = "";
-            BPM = 0.0f;
+            BPM = 0;
+
+            // Difficulty
+            OD = 0;
+            AR = 0;
+            CS = 0;
+            HP = 0;
+
+            // Additional
             ObjectCount = 0;
-            CircleSize = 0.0f;
-            ApproachRate = 0.0f;
-            HPDrainRate = 0.0f;
-            StarRating = 0.0f;
             CircleCount = 0;
             SliderCount = 0;
             SpinnerCount = 0;

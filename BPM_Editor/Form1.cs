@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -16,14 +17,15 @@ namespace BPM_Editor
         private string songsFolder = "";
         private Beatmap selectedBeatmap = null;
         
-        private List<string> beatmapFolders = new List<string>();
-        private List<string> beatmapNames = new List<string>();
+        private List<string> beatmapFolders = new List<string>();           // Complete list
+        private List<string> beatmapNames = new List<string>();             // Used for UI only
+        private List<string> difficulties = new List<string>();             // Complete list
+        private List<string> difficultyNames = new List<string>();          // Used for UI only
 
-        private List<string> difficulties = new List<string>();
-        private List<string> difficultyNames = new List<string>();
         private List<String> hitObjects = new List<string>();
         private List<String> newHitObjects = new List<string>();
 
+        #region Bit Masks
         private byte TITLE_MASK = 1;
         private byte ARTIST_MASK = 2;
         private byte SOURCE_MASK = 4;
@@ -43,23 +45,17 @@ namespace BPM_Editor
         private byte TYPE_SLIDER_NEW_COMBO = 6;
         private byte TYPE_SPINNER_NEW_COMBO = 12;
 
+        private Color COLOUR_VALUE_CHANGED = Color.FromArgb(255, 21, 131, 178);
+        private Color COLOUR_VALUE_DEFAULT = Color.FromArgb(255, 255, 255, 255);
+        #endregion
+
         public Form1()
         {
             InitializeComponent();
             menuStrip1.Renderer = new ToolStripProfessionalRenderer(new CustomProfessionalColours());
         }
 
-        private void cmdSave_Click(object sender, EventArgs e)
-        {
-            //string pathAndFileName = selectedBeatmap.FileAddr + tbDifficultyName;
-            //WriteBeatmapFile(pathAndFileName, hitObjects);
-            float newBpm = 0.0f;
-            if (float.TryParse(tbBPM.Text, out newBpm))
-            {
-                AdjustHitObjects(186.0f, newBpm, hitObjects, newHitObjects);
-            }
-        }
-
+        #region BPM_Adjustments
         private string AdjustCircle(float oldBpm, float newBpm, string[] tokens)
         {
             // Tokens: x, y, time, type | comboColour, hitSound, addition (optional)
@@ -138,6 +134,7 @@ namespace BPM_Editor
                 }
             }
         }
+        #endregion
 
         private void WriteBeatmapFile(string pathAndFileName, List<String> lines)
         {
@@ -164,6 +161,7 @@ namespace BPM_Editor
                 {
                     string line;
                     bool readingMetadata = true;
+                    bool readingBPM = false;
 
                     // Metadata checksum
                     int dataFound = 0;
@@ -174,7 +172,21 @@ namespace BPM_Editor
                         if (readingMetadata)
                         {
                             // Done reading metadata
-                            if (line.Contains("[HitObjects]"))
+                            if (line.Contains("[TimingPoints]"))
+                            {
+                                readingBPM = true;
+                            }
+                            else if (readingBPM)
+                            {
+                                readingBPM = false;
+
+                                // Formula: bpm = (ms/min) / (ms/beat)
+                                string[] tokens = line.Split(',');
+
+                                decimal msPerBeat = decimal.Parse(tokens[1]);
+                                selectedBeatmap.BPM = 60000 / msPerBeat;
+                            }
+                            else if (line.Contains("[HitObjects]"))
                             {
                                 readingMetadata = false;
                             }
@@ -213,22 +225,22 @@ namespace BPM_Editor
                                     }
                                     else if (((difficultyDataFound & OD_MASK) == 0) && key.Contains("OverallDifficulty"))
                                     {
-                                        selectedBeatmap.OverallDifficulty = float.Parse(value);
+                                        selectedBeatmap.OD = decimal.Parse(value);
                                         difficultyDataFound |= OD_MASK;
                                     }
                                     else if (((difficultyDataFound & AR_MASK) == 0) && key.Contains("ApproachRate"))
                                     {
-                                        selectedBeatmap.ApproachRate = float.Parse(value);
+                                        selectedBeatmap.AR = decimal.Parse(value);
                                         difficultyDataFound |= AR_MASK;
                                     }
                                     else if (((difficultyDataFound & CS_MASK) == 0) && key.Contains("CircleSize"))
                                     {
-                                        selectedBeatmap.CircleSize = float.Parse(value);
+                                        selectedBeatmap.CS = decimal.Parse(value);
                                         difficultyDataFound |= CS_MASK;
                                     }
                                     else if (((difficultyDataFound & HP_MASK) == 0) && key.Contains("HPDrainRate"))
                                     {
-                                        selectedBeatmap.HPDrainRate = float.Parse(value);
+                                        selectedBeatmap.HP = decimal.Parse(value);
                                         difficultyDataFound |= HP_MASK;
                                     }
                                 }
@@ -243,6 +255,7 @@ namespace BPM_Editor
                             string[] tokens = line.Split(',');
                             byte hitObjectType = Byte.Parse(tokens[3]);
 
+                            selectedBeatmap.ObjectCount++;
                             // Adjust the hit object to the new bpm based on its type
                             if (hitObjectType == TYPE_CIRCLE || hitObjectType == TYPE_CIRCLE_NEW_COMBO)
                             {
@@ -258,7 +271,6 @@ namespace BPM_Editor
                             }
                         }
                     }
-
                 }
             }
             catch (Exception e)
@@ -273,54 +285,133 @@ namespace BPM_Editor
         private void UpdateUI()
         {
             // Metadata
-            lblSelectedBeatmap.Text = selectedBeatmap.Source + " (" +
-                selectedBeatmap.Artist + ") - " +
+
+            string sourceAndArtist = (selectedBeatmap.Source == "") ?
+                selectedBeatmap.Artist :
+                selectedBeatmap.Source + " (" +
+                selectedBeatmap.Artist + ") -" ;
+
+            lblSelectedBeatmap.Text =
+                sourceAndArtist + " " + 
                 selectedBeatmap.Title + " [" +
                 selectedBeatmap.Version + "]";
 
             lblCreator.Text = "Mapped by " + selectedBeatmap.Creator;
 
+            lblBoldInfo.Text =
+                "BPM: " + string.Format("{0:0.0}", selectedBeatmap.BPM) +
+                "   Objects: " + selectedBeatmap.ObjectCount;
+
             lblHitObjects.Text =
                 "Circles: " + selectedBeatmap.CircleCount +
-                " Sliders: " + selectedBeatmap.SliderCount +
-                " Spinners: " + selectedBeatmap.SpinnerCount;
+                "   Sliders: " + selectedBeatmap.SliderCount +
+                "   Spinners: " + selectedBeatmap.SpinnerCount;
 
             lblDifficultyRating.Text =
-                "CS:" + selectedBeatmap.CircleSize.ToString() +
-                " AR:" + selectedBeatmap.ApproachRate.ToString() +
-                " OD:" + selectedBeatmap.OverallDifficulty.ToString() +
-                " HP:" + selectedBeatmap.HPDrainRate.ToString() +
-                " Stars:-";
+                "CS:" + selectedBeatmap.CS.ToString() +
+                "   AR:" + selectedBeatmap.AR.ToString() +
+                "   OD:" + selectedBeatmap.OD.ToString() +
+                "   HP:" + selectedBeatmap.HP.ToString();
 
+            floatFieldBPM.Text = selectedBeatmap.BPM.ToString();
             tbCreator.Text = selectedBeatmap.Creator;
             tbDifficultyName.Text = selectedBeatmap.Version;
 
             // Difficulty
-            tbOD.Text = selectedBeatmap.OverallDifficulty.ToString();
-            tbAR.Text = selectedBeatmap.ApproachRate.ToString();
-            tbCS.Text = selectedBeatmap.CircleSize.ToString();
-            tbHPDrain.Text = selectedBeatmap.HPDrainRate.ToString();
+            floatFieldOD.Value = (decimal)selectedBeatmap.OD;
+            floatFieldAR.Value = (decimal)selectedBeatmap.AR;
+            floatFieldCS.Value = (decimal)selectedBeatmap.CS;
+            floatFieldHP.Value = (decimal)selectedBeatmap.HP;
         }
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void lbBeatmaps_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Application.Exit();
+            UpdateDifficulties();
+        }
+        private void lbDifficulties_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ParseBeatmapFile(songsFolder + Path.DirectorySeparatorChar +
+                lbBeatmaps.GetItemText(lbBeatmaps.SelectedItem) + Path.DirectorySeparatorChar +
+                difficultyNames[lbDifficulties.SelectedIndex]);
         }
 
-        private void openFileToolStripMenuItem_Click(object sender, EventArgs e)
+        private void tbSearch_TextChanged(object sender, EventArgs e)
         {
-            // Show dialog
-            DialogResult dr = ofdSelectBeatmap.ShowDialog();
-            if (dr == System.Windows.Forms.DialogResult.OK)
+            // if the search textbox is empty
+            if (tbSearch.Text == "")
             {
-                // Check extension ending
-                string extension = Path.GetExtension(ofdSelectBeatmap.FileName);
-                if (extension.ToLower() == ".osu")
-                {
-                    // Parse beatmap for metadata
-                    ParseBeatmapFile(ofdSelectBeatmap.FileName);
-                }
+                // display all beatmap folders
+                beatmapNames = beatmapFolders;
             }
+            else
+            {
+                // display all beatmap folders containing the text in the search textbox
+                beatmapNames = beatmapFolders.FindAll(folder => folder.ToLower().Contains(tbSearch.Text.ToLower()));
+            }
+            // reset the datasource
+            lbBeatmaps.DataSource = beatmapNames;
+        }
+
+        #region Float Fields
+        private void floatFieldBPM_ValueChanged(object sender, EventArgs e)
+        {
+            FieldValueChanged((NumericUpDown)sender, (decimal)selectedBeatmap.BPM);
+        }
+        private void floatFieldAR_ValueChanged(object sender, EventArgs e)
+        {
+            FieldValueChanged((NumericUpDown)sender, (decimal)selectedBeatmap.AR);
+        }
+        private void floatFieldOD_ValueChanged(object sender, EventArgs e)
+        {
+            FieldValueChanged((NumericUpDown)sender, (decimal)selectedBeatmap.OD);
+        }
+        private void floatFieldCS_ValueChanged(object sender, EventArgs e)
+        {
+            FieldValueChanged((NumericUpDown)sender, (decimal)selectedBeatmap.CS);
+        }
+        private void floatFieldHP_ValueChanged(object sender, EventArgs e)
+        {
+            FieldValueChanged((NumericUpDown)sender, (decimal)selectedBeatmap.HP);
+        }
+        private void FieldValueChanged(NumericUpDown sender, decimal defaultValue)
+        {
+            sender.ForeColor = (sender.Value == defaultValue) ? COLOUR_VALUE_DEFAULT : COLOUR_VALUE_CHANGED;
+        }
+        #endregion
+
+        private void cmdRevert_Click(object sender, EventArgs e)
+        {
+            Revert();
+        }
+        private void cmdApply_Click(object sender, EventArgs e)
+        {
+
+        }
+        private void cmdCreateNew_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cmdRemoveDifficulty_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lbBeatmaps_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            AlternatingBackColour(
+                (ListBox)sender,
+                Color.FromArgb(255, 37, 37, 37),
+                Color.FromArgb(255, 47, 47, 47),
+                e);
+        }
+        private void lbDifficulties_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            AlternatingBackColour(
+                (ListBox)sender,
+                Color.FromArgb(255, 37, 37, 37),
+                Color.FromArgb(255, 47, 47, 47),
+                e);
         }
 
         private void setSongDirectoryToolStripMenuItem_Click(object sender, EventArgs e)
@@ -333,110 +424,18 @@ namespace BPM_Editor
                 ProcessSongsFolder(songsFolder);
             }
         }
-
-        private void ProcessSongsFolder(string path)
+        private void openInWindowsExplorerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Get a collection of folder names for the list box
-            beatmapFolders = new List<string>(Directory.EnumerateDirectories(path).Select(folder => new DirectoryInfo(folder).Name));
-            beatmapNames = beatmapFolders;
-            lbBeatmaps.DataSource = beatmapNames;
-            lbBeatmaps.SelectedIndex = 0;
+            OpenPathInWindowsExplorer(GetSelectedSongPath());
+        }
+        private void openDifficultyContainingFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenPathInWindowsExplorer(GetSelectedDifficultyPath());
+        }
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
 
-        private void lbBeatmaps_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            UpdateDifficulties();
-        }
-
-        private void UpdateDifficulties()
-        {
-            string difficultiesPath = songsFolder + Path.DirectorySeparatorChar + lbBeatmaps.GetItemText(lbBeatmaps.SelectedItem);
-            
-            difficulties = new List<string>(Directory.EnumerateFiles(difficultiesPath).
-                Select(file => new DirectoryInfo(file).Name).
-                Where(file => Path.GetExtension(file).Contains(".osu")));
-
-            difficultyNames = new List<string>(difficulties);
-
-            ProcessDifficultiesForUI();
-        }
-
-        private void ProcessDifficultiesForUI()
-        {
-            for (int i = 0; i < difficulties.Count; i++)
-            {
-                string difficulty = difficulties[i];
-                int indexOfOpenBrace = difficulty.IndexOf('[');
-                int indexOfCloseBrace = difficulty.IndexOf(']') + 1;
-                difficulties[i] = difficulty.Substring(indexOfOpenBrace, indexOfCloseBrace - indexOfOpenBrace);
-            }
-
-            lbDifficulties.DataSource = difficulties;
-        }
-
-        private void lbDifficulties_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ParseBeatmapFile(songsFolder + Path.DirectorySeparatorChar +
-                lbBeatmaps.GetItemText(lbBeatmaps.SelectedItem) + Path.DirectorySeparatorChar + 
-                difficultyNames[lbDifficulties.SelectedIndex]);
-        }
-
-        private void tbSearch_TextChanged(object sender, EventArgs e)
-        {
-            if (tbSearch.Text == "")
-            {
-                beatmapNames = beatmapFolders;
-
-            }
-            else
-            {
-                beatmapNames = beatmapFolders.FindAll(folder => folder.Contains(tbSearch.Text));
-            }
-            lbBeatmaps.DataSource = beatmapNames;
-        }
-
-        private void cmdRemoveDifficulty_Click(object sender, EventArgs e)
-        {
-
-        }
-    }
-
-    class CustomProfessionalColours : ProfessionalColorTable
-    {
-        public override Color MenuStripGradientBegin
-        {
-            get
-            {
-                return Color.FromArgb(255, 37, 37, 37);
-            }
-        }
-        public override Color MenuStripGradientEnd
-        {
-            get
-            {
-                return Color.FromArgb(255, 37, 37, 37);
-            }
-        }
-        public override Color MenuItemPressedGradientBegin
-        {
-            get
-            {
-                return Color.FromArgb(255, 21, 131, 178);
-            }
-        }
-        public override Color MenuItemPressedGradientMiddle
-        {
-            get
-            {
-                return Color.FromArgb(255, 21, 131, 178);
-            }
-        }
-        public override Color MenuItemPressedGradientEnd
-        {
-            get
-            {
-                return Color.FromArgb(255, 21, 131, 178);
-            }
-        }
     }
 }
