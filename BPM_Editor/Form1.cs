@@ -238,6 +238,24 @@ namespace BPM_Editor
                         {
                             // Reading HitObjects
                             hitObjects.Add(line);
+
+                            // Get the hit object type
+                            string[] tokens = line.Split(',');
+                            byte hitObjectType = Byte.Parse(tokens[3]);
+
+                            // Adjust the hit object to the new bpm based on its type
+                            if (hitObjectType == TYPE_CIRCLE || hitObjectType == TYPE_CIRCLE_NEW_COMBO)
+                            {
+                                selectedBeatmap.CircleCount++;
+                            }
+                            else if (hitObjectType == TYPE_SLIDER || hitObjectType == TYPE_SLIDER_NEW_COMBO)
+                            {
+                                selectedBeatmap.SliderCount++;
+                            }
+                            else if (hitObjectType == TYPE_SPINNER || hitObjectType == TYPE_SPINNER_NEW_COMBO)
+                            {
+                                selectedBeatmap.SpinnerCount++;
+                            }
                         }
                     }
 
@@ -260,7 +278,20 @@ namespace BPM_Editor
                 selectedBeatmap.Title + " [" +
                 selectedBeatmap.Version + "]";
 
-            lblCreator.Text = selectedBeatmap.Creator;
+            lblCreator.Text = "Mapped by " + selectedBeatmap.Creator;
+
+            lblHitObjects.Text =
+                "Circles: " + selectedBeatmap.CircleCount +
+                " Sliders: " + selectedBeatmap.SliderCount +
+                " Spinners: " + selectedBeatmap.SpinnerCount;
+
+            lblDifficultyRating.Text =
+                "CS:" + selectedBeatmap.CircleSize.ToString() +
+                " AR:" + selectedBeatmap.ApproachRate.ToString() +
+                " OD:" + selectedBeatmap.OverallDifficulty.ToString() +
+                " HP:" + selectedBeatmap.HPDrainRate.ToString() +
+                " Stars:-";
+
             tbCreator.Text = selectedBeatmap.Creator;
             tbDifficultyName.Text = selectedBeatmap.Version;
 

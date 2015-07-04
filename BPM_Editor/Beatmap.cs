@@ -146,6 +146,9 @@ namespace BPM_Editor
             ApproachRate = 0.0f;
             HPDrainRate = 0.0f;
             StarRating = 0.0f;
+            CircleCount = 0;
+            SliderCount = 0;
+            SpinnerCount = 0;
         }
     }
 }
