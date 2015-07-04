@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace BPM_Editor
+namespace osu_Beatmap_Editor
 {
     static class Program
     {

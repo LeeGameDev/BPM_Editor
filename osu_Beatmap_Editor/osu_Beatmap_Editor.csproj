@@ -7,8 +7,8 @@
     <ProjectGuid>{667F4F3D-57C0-4835-9666-75540B345437}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BPM_Editor</RootNamespace>
-    <AssemblyName>BPM_Editor</AssemblyName>
+    <RootNamespace>osu_Beatmap_Editor</RootNamespace>
+    <AssemblyName>osu_Beatmap_Editor</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -67,6 +67,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

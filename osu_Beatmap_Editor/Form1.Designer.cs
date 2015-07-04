@@ -1,4 +1,4 @@
-﻿namespace BPM_Editor
+﻿namespace osu_Beatmap_Editor
 {
     partial class Form1
     {
@@ -67,6 +67,8 @@
             this.cmdRemoveDifficulty = new System.Windows.Forms.Button();
             this.labelDifficulties = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.floatFieldBPMMultiplier = new System.Windows.Forms.NumericUpDown();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.floatFieldHP)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.floatFieldCS)).BeginInit();
@@ -75,6 +77,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.floatFieldBPM)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.floatFieldBPMMultiplier)).BeginInit();
             this.SuspendLayout();
             // 
             // ofdSelectBeatmap
@@ -96,6 +99,8 @@
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.floatFieldBPMMultiplier);
+            this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.labelPropertyEditor);
             this.panel1.Controls.Add(this.floatFieldHP);
             this.panel1.Controls.Add(this.cmdApply);
@@ -227,10 +232,10 @@
             // floatFieldBPM
             // 
             this.floatFieldBPM.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
-            this.floatFieldBPM.DecimalPlaces = 1;
+            this.floatFieldBPM.DecimalPlaces = 2;
             this.floatFieldBPM.Font = new System.Drawing.Font("Trebuchet MS", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.floatFieldBPM.ForeColor = System.Drawing.Color.White;
-            this.floatFieldBPM.Location = new System.Drawing.Point(106, 40);
+            this.floatFieldBPM.Location = new System.Drawing.Point(72, 40);
             this.floatFieldBPM.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -248,7 +253,7 @@
             this.labelBPM.ForeColor = System.Drawing.Color.White;
             this.labelBPM.Location = new System.Drawing.Point(7, 40);
             this.labelBPM.Name = "labelBPM";
-            this.labelBPM.Size = new System.Drawing.Size(93, 23);
+            this.labelBPM.Size = new System.Drawing.Size(59, 23);
             this.labelBPM.TabIndex = 19;
             this.labelBPM.Text = "BPM";
             this.labelBPM.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -554,6 +559,40 @@
             this.panel2.Size = new System.Drawing.Size(465, 121);
             this.panel2.TabIndex = 18;
             // 
+            // label1
+            // 
+            this.label1.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(163, 39);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(80, 23);
+            this.label1.TabIndex = 26;
+            this.label1.Text = "Multiplier";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // floatFieldBPMMultiplier
+            // 
+            this.floatFieldBPMMultiplier.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
+            this.floatFieldBPMMultiplier.DecimalPlaces = 2;
+            this.floatFieldBPMMultiplier.Font = new System.Drawing.Font("Trebuchet MS", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.floatFieldBPMMultiplier.ForeColor = System.Drawing.Color.White;
+            this.floatFieldBPMMultiplier.Location = new System.Drawing.Point(243, 39);
+            this.floatFieldBPMMultiplier.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.floatFieldBPMMultiplier.Name = "floatFieldBPMMultiplier";
+            this.floatFieldBPMMultiplier.Size = new System.Drawing.Size(62, 23);
+            this.floatFieldBPMMultiplier.TabIndex = 27;
+            this.floatFieldBPMMultiplier.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.floatFieldBPMMultiplier.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.floatFieldBPMMultiplier.ValueChanged += new System.EventHandler(this.floatFieldBPMMultiplier_ValueChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -572,7 +611,7 @@
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
-            this.Text = "BPM Editor";
+            this.Text = "osu! Beatmap Editor";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.floatFieldHP)).EndInit();
@@ -583,6 +622,7 @@
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.floatFieldBPMMultiplier)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -629,6 +669,8 @@
         private System.Windows.Forms.Label labelPropertyEditor;
         private System.Windows.Forms.ToolStripMenuItem openInWindowsExplorerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openDifficultyContainingFolderToolStripMenuItem;
+        private System.Windows.Forms.NumericUpDown floatFieldBPMMultiplier;
+        private System.Windows.Forms.Label label1;
     }
 }
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace BPM_Editor
+namespace osu_Beatmap_Editor
 {
     class Beatmap
     {

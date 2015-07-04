@@ -1,0 +1,9 @@
+C:\Users\Alexander\Desktop\osu_Beatmap_Editor\osu_Beatmap_Editor\bin\Debug\osu_Beatmap_Editor.exe.config
+C:\Users\Alexander\Desktop\osu_Beatmap_Editor\osu_Beatmap_Editor\bin\Debug\osu_Beatmap_Editor.exe
+C:\Users\Alexander\Desktop\osu_Beatmap_Editor\osu_Beatmap_Editor\bin\Debug\osu_Beatmap_Editor.pdb
+C:\Users\Alexander\Desktop\osu_Beatmap_Editor\osu_Beatmap_Editor\obj\Debug\osu_Beatmap_Editor.Form1.resources
+C:\Users\Alexander\Desktop\osu_Beatmap_Editor\osu_Beatmap_Editor\obj\Debug\osu_Beatmap_Editor.Properties.Resources.resources
+C:\Users\Alexander\Desktop\osu_Beatmap_Editor\osu_Beatmap_Editor\obj\Debug\osu_Beatmap_Editor.csproj.GenerateResource.Cache
+C:\Users\Alexander\Desktop\osu_Beatmap_Editor\osu_Beatmap_Editor\obj\Debug\osu_Beatmap_Editor.exe
+C:\Users\Alexander\Desktop\osu_Beatmap_Editor\osu_Beatmap_Editor\obj\Debug\osu_Beatmap_Editor.pdb
+C:\Users\Alexander\Desktop\osu_Beatmap_Editor\osu_Beatmap_Editor\obj\Debug\osu_Beatmap_Editor.csprojResolveAssemblyReference.cache

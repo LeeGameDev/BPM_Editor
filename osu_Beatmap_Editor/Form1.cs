@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace BPM_Editor
+namespace osu_Beatmap_Editor
 {
     public partial class Form1 : Form
     {
@@ -356,6 +356,10 @@ namespace BPM_Editor
         private void floatFieldBPM_ValueChanged(object sender, EventArgs e)
         {
             FieldValueChanged((NumericUpDown)sender, (decimal)selectedBeatmap.BPM);
+        }
+        private void floatFieldBPMMultiplier_ValueChanged(object sender, EventArgs e)
+        {
+
         }
         private void floatFieldAR_ValueChanged(object sender, EventArgs e)
         {
