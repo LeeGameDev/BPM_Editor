@@ -15,6 +15,10 @@ namespace BPM_Editor
     {
         private string songsFolder = "";
         private Beatmap selectedBeatmap = null;
+        
+        private List<string> beatmapFolders = new List<string>();
+        private List<string> beatmapNames = new List<string>();
+
         private List<string> difficulties = new List<string>();
         private List<string> difficultyNames = new List<string>();
         private List<String> hitObjects = new List<string>();
@@ -42,6 +46,7 @@ namespace BPM_Editor
         public Form1()
         {
             InitializeComponent();
+            menuStrip1.Renderer = new ToolStripProfessionalRenderer(new CustomProfessionalColours());
         }
 
         private void cmdSave_Click(object sender, EventArgs e)
@@ -301,8 +306,9 @@ namespace BPM_Editor
         private void ProcessSongsFolder(string path)
         {
             // Get a collection of folder names for the list box
-            List<string> beatmapFolders = new List<string>(Directory.EnumerateDirectories(path).Select(folder => new DirectoryInfo(folder).Name));
-            lbBeatmaps.DataSource = beatmapFolders;
+            beatmapFolders = new List<string>(Directory.EnumerateDirectories(path).Select(folder => new DirectoryInfo(folder).Name));
+            beatmapNames = beatmapFolders;
+            lbBeatmaps.DataSource = beatmapNames;
             lbBeatmaps.SelectedIndex = 0;
         }
 
@@ -342,6 +348,64 @@ namespace BPM_Editor
             ParseBeatmapFile(songsFolder + Path.DirectorySeparatorChar +
                 lbBeatmaps.GetItemText(lbBeatmaps.SelectedItem) + Path.DirectorySeparatorChar + 
                 difficultyNames[lbDifficulties.SelectedIndex]);
+        }
+
+        private void tbSearch_TextChanged(object sender, EventArgs e)
+        {
+            if (tbSearch.Text == "")
+            {
+                beatmapNames = beatmapFolders;
+
+            }
+            else
+            {
+                beatmapNames = beatmapFolders.FindAll(folder => folder.Contains(tbSearch.Text));
+            }
+            lbBeatmaps.DataSource = beatmapNames;
+        }
+
+        private void cmdRemoveDifficulty_Click(object sender, EventArgs e)
+        {
+
+        }
+    }
+
+    class CustomProfessionalColours : ProfessionalColorTable
+    {
+        public override Color MenuStripGradientBegin
+        {
+            get
+            {
+                return Color.FromArgb(255, 37, 37, 37);
+            }
+        }
+        public override Color MenuStripGradientEnd
+        {
+            get
+            {
+                return Color.FromArgb(255, 37, 37, 37);
+            }
+        }
+        public override Color MenuItemPressedGradientBegin
+        {
+            get
+            {
+                return Color.FromArgb(255, 21, 131, 178);
+            }
+        }
+        public override Color MenuItemPressedGradientMiddle
+        {
+            get
+            {
+                return Color.FromArgb(255, 21, 131, 178);
+            }
+        }
+        public override Color MenuItemPressedGradientEnd
+        {
+            get
+            {
+                return Color.FromArgb(255, 21, 131, 178);
+            }
         }
     }
 }
