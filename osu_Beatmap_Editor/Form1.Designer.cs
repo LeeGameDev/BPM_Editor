@@ -67,8 +67,7 @@
             this.cmdRemoveDifficulty = new System.Windows.Forms.Button();
             this.labelDifficulties = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.floatFieldBPMMultiplier = new System.Windows.Forms.NumericUpDown();
+            this.cmdTest = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.floatFieldHP)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.floatFieldCS)).BeginInit();
@@ -77,7 +76,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.floatFieldBPM)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.floatFieldBPMMultiplier)).BeginInit();
             this.SuspendLayout();
             // 
             // ofdSelectBeatmap
@@ -99,8 +97,6 @@
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.floatFieldBPMMultiplier);
-            this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.labelPropertyEditor);
             this.panel1.Controls.Add(this.floatFieldHP);
             this.panel1.Controls.Add(this.cmdApply);
@@ -559,39 +555,15 @@
             this.panel2.Size = new System.Drawing.Size(465, 121);
             this.panel2.TabIndex = 18;
             // 
-            // label1
+            // cmdTest
             // 
-            this.label1.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(163, 39);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(80, 23);
-            this.label1.TabIndex = 26;
-            this.label1.Text = "Multiplier";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // floatFieldBPMMultiplier
-            // 
-            this.floatFieldBPMMultiplier.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
-            this.floatFieldBPMMultiplier.DecimalPlaces = 2;
-            this.floatFieldBPMMultiplier.Font = new System.Drawing.Font("Trebuchet MS", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.floatFieldBPMMultiplier.ForeColor = System.Drawing.Color.White;
-            this.floatFieldBPMMultiplier.Location = new System.Drawing.Point(243, 39);
-            this.floatFieldBPMMultiplier.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.floatFieldBPMMultiplier.Name = "floatFieldBPMMultiplier";
-            this.floatFieldBPMMultiplier.Size = new System.Drawing.Size(62, 23);
-            this.floatFieldBPMMultiplier.TabIndex = 27;
-            this.floatFieldBPMMultiplier.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.floatFieldBPMMultiplier.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.floatFieldBPMMultiplier.ValueChanged += new System.EventHandler(this.floatFieldBPMMultiplier_ValueChanged);
+            this.cmdTest.Location = new System.Drawing.Point(813, 74);
+            this.cmdTest.Name = "cmdTest";
+            this.cmdTest.Size = new System.Drawing.Size(124, 23);
+            this.cmdTest.TabIndex = 19;
+            this.cmdTest.Text = "Test SoundStretch";
+            this.cmdTest.UseVisualStyleBackColor = true;
+            this.cmdTest.Click += new System.EventHandler(this.cmdTest_Click);
             // 
             // Form1
             // 
@@ -599,6 +571,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.ClientSize = new System.Drawing.Size(961, 499);
+            this.Controls.Add(this.cmdTest);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.labelDifficulties);
             this.Controls.Add(this.cmdRemoveDifficulty);
@@ -622,7 +595,6 @@
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.floatFieldBPMMultiplier)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -669,8 +641,7 @@
         private System.Windows.Forms.Label labelPropertyEditor;
         private System.Windows.Forms.ToolStripMenuItem openInWindowsExplorerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openDifficultyContainingFolderToolStripMenuItem;
-        private System.Windows.Forms.NumericUpDown floatFieldBPMMultiplier;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button cmdTest;
     }
 }
 

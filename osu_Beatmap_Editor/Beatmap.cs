@@ -5,6 +5,15 @@ namespace osu_Beatmap_Editor
 {
     class Beatmap
     {
+        #region Audio
+        private string audioFile;
+        public string AudioFile
+        {
+            get { return audioFile; }
+            set { audioFile = value; }
+        }
+        #endregion
+
         #region Metadata
         private string fileAddr;
         public string FileAddr

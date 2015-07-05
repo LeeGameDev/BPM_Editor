@@ -22,8 +22,10 @@ namespace osu_Beatmap_Editor
         private List<string> difficulties = new List<string>();             // Complete list
         private List<string> difficultyNames = new List<string>();          // Used for UI only
 
-        private List<String> hitObjects = new List<string>();
-        private List<String> newHitObjects = new List<string>();
+        private List<string> hitObjects = new List<string>();
+        private List<string> newHitObjects = new List<string>();
+
+        private Dictionary<string, int> newMetadata = new Dictionary<string, int>();
 
         #region Bit Masks
         private byte TITLE_MASK = 1;
@@ -198,7 +200,11 @@ namespace osu_Beatmap_Editor
                                     string key = tokens[0];
                                     string value = tokens[1].Trim();
 
-                                    if (((dataFound & TITLE_MASK) == 0) && key.Contains("Title"))
+                                    if (key.Contains("AudioFilename"))
+                                    {
+                                        selectedBeatmap.AudioFile = value.TrimStart();
+                                    }
+                                    else if (((dataFound & TITLE_MASK) == 0) && key.Contains("Title"))
                                     {
                                         selectedBeatmap.Title = value;
                                         dataFound |= TITLE_MASK;
@@ -357,10 +363,6 @@ namespace osu_Beatmap_Editor
         {
             FieldValueChanged((NumericUpDown)sender, (decimal)selectedBeatmap.BPM);
         }
-        private void floatFieldBPMMultiplier_ValueChanged(object sender, EventArgs e)
-        {
-
-        }
         private void floatFieldAR_ValueChanged(object sender, EventArgs e)
         {
             FieldValueChanged((NumericUpDown)sender, (decimal)selectedBeatmap.AR);
@@ -393,7 +395,20 @@ namespace osu_Beatmap_Editor
         }
         private void cmdCreateNew_Click(object sender, EventArgs e)
         {
+            int lineCount = 0;
 
+            using (StreamWriter sw = new StreamWriter("Temp.osu"))
+            {
+                using (StreamReader sr = new StreamReader(selectedBeatmap.FileAddr))
+                {
+                    // Increment line count
+                    lineCount++;
+
+                    // Check lineCount
+
+                    // Read in a line of text
+                }
+            }
         }
 
         private void cmdRemoveDifficulty_Click(object sender, EventArgs e)
@@ -441,5 +456,13 @@ namespace osu_Beatmap_Editor
             Application.Exit();
         }
 
+        private void cmdTest_Click(object sender, EventArgs e)
+        {
+            string str = System.IO.Directory.GetCurrentDirectory();
+            string appDir = System.IO.Directory.GetCurrentDirectory() + "\\soundstretch.exe";
+            string wavDir = selectedBeatmap.AudioFile;
+            string outDir = GetSelectedSongPath() + "";
+            Process.Start(appDir, "" + wavDir + " " + outDir + " -bpm=" + floatFieldBPM.Value);
+        }
     }
 }
