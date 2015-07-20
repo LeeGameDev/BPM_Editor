@@ -50,7 +50,7 @@
             this.labelCS = new System.Windows.Forms.Label();
             this.lblDifficultyRating = new System.Windows.Forms.Label();
             this.lblHitObjects = new System.Windows.Forms.Label();
-            this.lblBoldInfo = new System.Windows.Forms.Label();
+            this.lblBPMInfo = new System.Windows.Forms.Label();
             this.lblCreator = new System.Windows.Forms.Label();
             this.cmdCreateNew = new System.Windows.Forms.Button();
             this.lbBeatmaps = new System.Windows.Forms.ListBox();
@@ -60,6 +60,8 @@
             this.openInWindowsExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openDifficultyContainingFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.manageModesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fbdSongs = new System.Windows.Forms.FolderBrowserDialog();
             this.lbDifficulties = new System.Windows.Forms.ListBox();
             this.tbSearch = new System.Windows.Forms.TextBox();
@@ -67,7 +69,8 @@
             this.cmdRemoveDifficulty = new System.Windows.Forms.Button();
             this.labelDifficulties = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.cmdTest = new System.Windows.Forms.Button();
+            this.cbEncoding = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.floatFieldHP)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.floatFieldCS)).BeginInit();
@@ -97,6 +100,8 @@
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.label1);
+            this.panel1.Controls.Add(this.cbEncoding);
             this.panel1.Controls.Add(this.labelPropertyEditor);
             this.panel1.Controls.Add(this.floatFieldHP);
             this.panel1.Controls.Add(this.cmdApply);
@@ -151,6 +156,7 @@
             // cmdApply
             // 
             this.cmdApply.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(47)))), ((int)(((byte)(47)))));
+            this.cmdApply.Enabled = false;
             this.cmdApply.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmdApply.ForeColor = System.Drawing.Color.White;
             this.cmdApply.Location = new System.Drawing.Point(159, 190);
@@ -279,6 +285,7 @@
             // cmdRevert
             // 
             this.cmdRevert.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(47)))), ((int)(((byte)(47)))));
+            this.cmdRevert.Enabled = false;
             this.cmdRevert.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmdRevert.ForeColor = System.Drawing.Color.White;
             this.cmdRevert.Location = new System.Drawing.Point(3, 190);
@@ -373,15 +380,15 @@
             this.lblHitObjects.TabIndex = 20;
             this.lblHitObjects.Text = "Circles: --   Sliders: --   Spinners: --";
             // 
-            // lblBoldInfo
+            // lblBPMInfo
             // 
-            this.lblBoldInfo.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblBoldInfo.ForeColor = System.Drawing.Color.White;
-            this.lblBoldInfo.Location = new System.Drawing.Point(0, 46);
-            this.lblBoldInfo.Name = "lblBoldInfo";
-            this.lblBoldInfo.Size = new System.Drawing.Size(465, 18);
-            this.lblBoldInfo.TabIndex = 19;
-            this.lblBoldInfo.Text = "BPM: --   Objects: --";
+            this.lblBPMInfo.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblBPMInfo.ForeColor = System.Drawing.Color.White;
+            this.lblBPMInfo.Location = new System.Drawing.Point(0, 46);
+            this.lblBPMInfo.Name = "lblBPMInfo";
+            this.lblBPMInfo.Size = new System.Drawing.Size(465, 18);
+            this.lblBPMInfo.TabIndex = 19;
+            this.lblBPMInfo.Text = "BPM: --   Objects: --";
             // 
             // lblCreator
             // 
@@ -424,7 +431,8 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem});
+            this.fileToolStripMenuItem,
+            this.toolsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(961, 24);
@@ -476,6 +484,22 @@
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
+            // toolsToolStripMenuItem
+            // 
+            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.manageModesToolStripMenuItem});
+            this.toolsToolStripMenuItem.ForeColor = System.Drawing.Color.White;
+            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.toolsToolStripMenuItem.Text = "Tools";
+            // 
+            // manageModesToolStripMenuItem
+            // 
+            this.manageModesToolStripMenuItem.Name = "manageModesToolStripMenuItem";
+            this.manageModesToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+            this.manageModesToolStripMenuItem.Text = "Manage Modes";
+            this.manageModesToolStripMenuItem.Click += new System.EventHandler(this.manageModesToolStripMenuItem_Click);
             // 
             // fbdSongs
             // 
@@ -547,7 +571,7 @@
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel2.Controls.Add(this.lblSelectedBeatmap);
             this.panel2.Controls.Add(this.lblCreator);
-            this.panel2.Controls.Add(this.lblBoldInfo);
+            this.panel2.Controls.Add(this.lblBPMInfo);
             this.panel2.Controls.Add(this.lblHitObjects);
             this.panel2.Controls.Add(this.lblDifficultyRating);
             this.panel2.Location = new System.Drawing.Point(12, 27);
@@ -555,15 +579,28 @@
             this.panel2.Size = new System.Drawing.Size(465, 121);
             this.panel2.TabIndex = 18;
             // 
-            // cmdTest
+            // cbEncoding
             // 
-            this.cmdTest.Location = new System.Drawing.Point(813, 74);
-            this.cmdTest.Name = "cmdTest";
-            this.cmdTest.Size = new System.Drawing.Size(124, 23);
-            this.cmdTest.TabIndex = 19;
-            this.cmdTest.Text = "Test SoundStretch";
-            this.cmdTest.UseVisualStyleBackColor = true;
-            this.cmdTest.Click += new System.EventHandler(this.cmdTest_Click);
+            this.cbEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbEncoding.FormattingEnabled = true;
+            this.cbEncoding.Items.AddRange(new object[] {
+            "MP3",
+            "WAV"});
+            this.cbEncoding.Location = new System.Drawing.Point(251, 40);
+            this.cbEncoding.Name = "cbEncoding";
+            this.cbEncoding.Size = new System.Drawing.Size(55, 21);
+            this.cbEncoding.TabIndex = 26;
+            // 
+            // label1
+            // 
+            this.label1.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(163, 40);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(82, 23);
+            this.label1.TabIndex = 27;
+            this.label1.Text = "Encoding";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // Form1
             // 
@@ -571,7 +608,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(37)))), ((int)(((byte)(37)))));
             this.ClientSize = new System.Drawing.Size(961, 499);
-            this.Controls.Add(this.cmdTest);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.labelDifficulties);
             this.Controls.Add(this.cmdRemoveDifficulty);
@@ -629,7 +665,7 @@
         private System.Windows.Forms.Label labelBPM;
         private System.Windows.Forms.Button cmdApply;
         private System.Windows.Forms.Button cmdRevert;
-        private System.Windows.Forms.Label lblBoldInfo;
+        private System.Windows.Forms.Label lblBPMInfo;
         private System.Windows.Forms.Label lblHitObjects;
         private System.Windows.Forms.Label lblDifficultyRating;
         private System.Windows.Forms.NumericUpDown floatFieldBPM;
@@ -641,7 +677,10 @@
         private System.Windows.Forms.Label labelPropertyEditor;
         private System.Windows.Forms.ToolStripMenuItem openInWindowsExplorerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openDifficultyContainingFolderToolStripMenuItem;
-        private System.Windows.Forms.Button cmdTest;
+        private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem manageModesToolStripMenuItem;
+        private System.Windows.Forms.ComboBox cbEncoding;
+        private System.Windows.Forms.Label label1;
     }
 }
 

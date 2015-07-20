@@ -44,7 +44,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Beatmap.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -54,10 +53,19 @@
     <Compile Include="FormHelperFunctions.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="ManageModes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ManageModes.Designer.cs">
+      <DependentUpon>ManageModes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManageModes.resx">
+      <DependentUpon>ManageModes.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -81,6 +89,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\osu-BMAPI-master\osu!BMAPI.csproj">
+      <Project>{7d292085-3f6f-4299-b941-4d2c185da37e}</Project>
+      <Name>osu!BMAPI</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

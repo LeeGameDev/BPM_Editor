@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using BMAPI.v1;
 
 namespace osu_Beatmap_Editor
 {
@@ -16,56 +17,106 @@ namespace osu_Beatmap_Editor
     {
         private void ProcessSongsFolder(string path)
         {
-            // Get a collection of folder names for the list box
-            beatmapFolders = new List<string>(Directory.EnumerateDirectories(path).Select(folder => new DirectoryInfo(folder).Name));
-            beatmapNames = beatmapFolders;
+            // Get a collection of beatmap folder names for the UI
+            beatmapNames = new List<string>(Program.beatmapFolders.Select(file => new DirectoryInfo(file).Name));
+            
+            // Update UI
             lbBeatmaps.DataSource = beatmapNames;
-            lbBeatmaps.SelectedIndex = 0;
+
+            // Get a collection of difficulty file names for the UI
+            UpdateDifficulties();
         }
 
+        // Gets the names of the files with .osu extension for the selected beatmap
         private void UpdateDifficulties()
         {
-            string difficultiesPath = songsFolder + Path.DirectorySeparatorChar + lbBeatmaps.GetItemText(lbBeatmaps.SelectedItem);
+            // Get the files in the beatmap folder
+            string difficultiesPath = Program.songsFolder + Path.DirectorySeparatorChar + lbBeatmaps.GetItemText(lbBeatmaps.SelectedItem);
 
-            difficulties = new List<string>(Directory.EnumerateFiles(difficultiesPath).
-                Select(file => new DirectoryInfo(file).Name).
+            difficultyPaths = new List<string>(Directory.EnumerateFiles(difficultiesPath).
                 Where(file => Path.GetExtension(file).Contains(".osu")));
 
-            difficultyNames = new List<string>(difficulties);
-
-            ProcessDifficultiesForUI();
-        }
-        private void ProcessDifficultiesForUI()
-        {
-            for (int i = 0; i < difficulties.Count; i++)
+            // Create a List of Beatmaps from these files
+            difficulties.Clear();
+            for (int i = 0; i < difficultyPaths.Count; i++)
             {
-                string difficulty = difficulties[i];
-                int indexOfOpenBrace = difficulty.IndexOf('[');
-                int indexOfCloseBrace = difficulty.IndexOf(']') + 1;
-                difficulties[i] = difficulty.Substring(indexOfOpenBrace, indexOfCloseBrace - indexOfOpenBrace);
+                difficulties.Add(new Beatmap(difficultyPaths[i]));
             }
 
-            lbDifficulties.DataSource = difficulties;
+            difficultyDisplayNames = new List<string>(difficulties.Select(diff => diff.Version));
+
+            lbDifficulties.DataSource = difficultyDisplayNames;
         }
 
-        private void Revert()
+        private void RevertProperties()
         {
-            floatFieldBPM.Value = selectedBeatmap.BPM;
-            floatFieldAR.Value = selectedBeatmap.AR;
-            floatFieldOD.Value = selectedBeatmap.OD;
-            floatFieldCS.Value = selectedBeatmap.CS;
-            floatFieldHP.Value = selectedBeatmap.HP;
+            floatFieldBPM.Value = (decimal)selectedBeatmap.BPM;
+            floatFieldAR.Value = (decimal)selectedBeatmap.ApproachRate;
+            floatFieldOD.Value = (decimal)selectedBeatmap.OverallDifficulty;
+            floatFieldCS.Value = (decimal)selectedBeatmap.CircleSize;
+            floatFieldHP.Value = (decimal)selectedBeatmap.HPDrainRate;
+        }
+
+        private void ApplyToDifficulty()
+        {
+            UpdateBeatmapProperties(selectedBeatmap);
+
+            selectedBeatmap.Save(selectedBeatmap.Filename);
+        }
+
+        private void SaveDifficultyAs()
+        {
+            // Create new instance of a beatmap based on an existing beatmap difficulty
+            Beatmap newBeatmap = new Beatmap(GetSelectedDifficultyPath());
+
+            // Update properties with new values
+            UpdateBeatmapProperties(newBeatmap);
+
+            // Save
+            string diffPath = GetSelectedDifficultyPath().Replace(difficultyPaths[lbDifficulties.SelectedIndex], "[" + tbDifficultyName.Text + "]");
+            
+            newBeatmap.Save(diffPath);
+        }
+
+        private void UpdateBeatmapProperties(Beatmap beatmap)
+        {
+            // Set properties in selected beatmap difficulty:
+            beatmap.Version = tbDifficultyName.Text;
+            beatmap.Creator = tbCreator.Text;
+            beatmap.ApproachRate = (float)floatFieldAR.Value;
+            beatmap.OverallDifficulty = (float)floatFieldOD.Value;
+            beatmap.CircleSize= (float)floatFieldCS.Value;
+            beatmap.HPDrainRate = (float)floatFieldHP.Value;
+
+            // Check if BPM is different
+            float bpm = (float)floatFieldBPM.Value;
+            if (beatmap.BPM != bpm)
+            {
+                beatmap.BPM = bpm;
+            }
+        }
+
+        private void RemoveDifficulty()
+        {
+            try
+            {
+                File.Delete(GetSelectedDifficultyPath());
+            }
+            catch
+            {
+
+            }
+
+            UpdateDifficulties();
         }
 
         private string GetSelectedDifficultyPath()
         {
-            return songsFolder + Path.DirectorySeparatorChar +
-                lbBeatmaps.GetItemText(lbBeatmaps.SelectedItem) + Path.DirectorySeparatorChar +
-                difficultyNames[lbDifficulties.SelectedIndex];
+            return difficultyPaths[lbDifficulties.SelectedIndex];
         }
         private string GetSelectedSongPath()
         {
-            return songsFolder + Path.DirectorySeparatorChar + lbBeatmaps.GetItemText(lbBeatmaps.SelectedItem);
+            return Program.songsFolder + Path.DirectorySeparatorChar + lbBeatmaps.GetItemText(lbBeatmaps.SelectedItem);
         }
 
         private void OpenPathInWindowsExplorer(string path)

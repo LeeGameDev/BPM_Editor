@@ -6,6 +6,16 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu_Beatmap_Editor", "osu_Beatmap_Editor\osu_Beatmap_Editor.csproj", "{667F4F3D-57C0-4835-9666-75540B345437}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E23C785C-9CF8-4101-BA15-B6F6D8E034B4}"
+	ProjectSection(SolutionItems) = preProject
+		External Libs\v1\Beatmap.cs = External Libs\v1\Beatmap.cs
+		External Libs\v1\Combo.cs = External Libs\v1\Combo.cs
+		External Libs\v1\Enums.cs = External Libs\v1\Enums.cs
+		External Libs\v1\TimingPoint.cs = External Libs\v1\TimingPoint.cs
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu! BPM Changer", "osu! BPM Changer\osu! BPM Changer.csproj", "{88026F3A-2BC2-4542-87CE-6A7E796FD2DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu!BMAPI", "osu-BMAPI-master\osu!BMAPI.csproj", "{7D292085-3F6F-4299-B941-4D2C185DA37E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,6 +27,14 @@ Global
 		{667F4F3D-57C0-4835-9666-75540B345437}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{667F4F3D-57C0-4835-9666-75540B345437}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{667F4F3D-57C0-4835-9666-75540B345437}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88026F3A-2BC2-4542-87CE-6A7E796FD2DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88026F3A-2BC2-4542-87CE-6A7E796FD2DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88026F3A-2BC2-4542-87CE-6A7E796FD2DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88026F3A-2BC2-4542-87CE-6A7E796FD2DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D292085-3F6F-4299-B941-4D2C185DA37E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D292085-3F6F-4299-B941-4D2C185DA37E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D292085-3F6F-4299-B941-4D2C185DA37E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D292085-3F6F-4299-B941-4D2C185DA37E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,11 @@
+C:\Users\Alexander\Downloads\osu--BPM-Changer-master\osu--BPM-Changer-master\osu! BPM Changer\bin\Debug\osu! BPM Changer.exe.config
+C:\Users\Alexander\Desktop\osu_Beatmap_Editor\osu! BPM Changer\obj\Debug\osu! BPM Changer.csprojResolveAssemblyReference.cache
+C:\Users\Alexander\Desktop\osu_Beatmap_Editor\osu! BPM Changer\bin\Debug\lame.exe
+C:\Users\Alexander\Desktop\osu_Beatmap_Editor\osu! BPM Changer\bin\Debug\soundstretch.exe
+C:\Users\Alexander\Desktop\osu_Beatmap_Editor\osu! BPM Changer\bin\Debug\osu! BPM Changer.exe.config
+C:\Users\Alexander\Desktop\osu_Beatmap_Editor\osu! BPM Changer\bin\Debug\osu! BPM Changer.exe
+C:\Users\Alexander\Desktop\osu_Beatmap_Editor\osu! BPM Changer\bin\Debug\osu! BPM Changer.pdb
+C:\Users\Alexander\Desktop\osu_Beatmap_Editor\osu! BPM Changer\bin\Debug\osu!BMAPI.dll
+C:\Users\Alexander\Desktop\osu_Beatmap_Editor\osu! BPM Changer\bin\Debug\osu!BMAPI.pdb
+C:\Users\Alexander\Desktop\osu_Beatmap_Editor\osu! BPM Changer\obj\Debug\osu! BPM Changer.exe
+C:\Users\Alexander\Desktop\osu_Beatmap_Editor\osu! BPM Changer\obj\Debug\osu! BPM Changer.pdb

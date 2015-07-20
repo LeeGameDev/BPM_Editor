@@ -7,3 +7,6 @@ C:\Users\Alexander\Desktop\osu_Beatmap_Editor\osu_Beatmap_Editor\obj\Debug\osu_B
 C:\Users\Alexander\Desktop\osu_Beatmap_Editor\osu_Beatmap_Editor\obj\Debug\osu_Beatmap_Editor.exe
 C:\Users\Alexander\Desktop\osu_Beatmap_Editor\osu_Beatmap_Editor\obj\Debug\osu_Beatmap_Editor.pdb
 C:\Users\Alexander\Desktop\osu_Beatmap_Editor\osu_Beatmap_Editor\obj\Debug\osu_Beatmap_Editor.csprojResolveAssemblyReference.cache
+C:\Users\Alexander\Desktop\osu_Beatmap_Editor\osu_Beatmap_Editor\obj\Debug\osu_Beatmap_Editor.ManageModes.resources
+C:\Users\Alexander\Desktop\osu_Beatmap_Editor\osu_Beatmap_Editor\bin\Debug\osu!BMAPI.dll
+C:\Users\Alexander\Desktop\osu_Beatmap_Editor\osu_Beatmap_Editor\bin\Debug\osu!BMAPI.pdb
