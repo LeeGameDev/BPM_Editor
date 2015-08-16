@@ -15,16 +15,25 @@ namespace osu_Beatmap_Editor
 {
     public partial class Form1 : Form
     {
-        private void ProcessSongsFolder(string path)
+        private void ProcessSongsFolder()
         {
-            // Get a collection of beatmap folder names for the UI
-            beatmapNames = new List<string>(Program.beatmapFolders.Select(file => new DirectoryInfo(file).Name));
-            
-            // Update UI
-            lbBeatmaps.DataSource = beatmapNames;
+            UpdateBeatmapNames(Program.beatmapFolders);
 
             // Get a collection of difficulty file names for the UI
             UpdateDifficulties();
+        }
+
+        private void UpdateBeatmapNames(List<string> beatmapFolders)
+        {
+            // Update UI
+            lbBeatmaps.DataSource = GetBeatmapFolderNames(beatmapFolders);
+        }
+
+        private List<string> GetBeatmapFolderNames(List<string> beatmapFolders)
+        {
+            beatmapNames = new List<string>(beatmapFolders.Select(file => new DirectoryInfo(file).Name));
+
+            return beatmapNames;
         }
 
         // Gets the names of the files with .osu extension for the selected beatmap
@@ -50,6 +59,11 @@ namespace osu_Beatmap_Editor
 
         private void RevertProperties()
         {
+            // string properties
+            tbDifficultyName.Text = selectedBeatmap.Version;
+            tbCreator.Text = selectedBeatmap.Creator;
+
+            // decimal properties
             floatFieldBPM.Value = (decimal)selectedBeatmap.BPM;
             floatFieldAR.Value = (decimal)selectedBeatmap.ApproachRate;
             floatFieldOD.Value = (decimal)selectedBeatmap.OverallDifficulty;
@@ -59,7 +73,7 @@ namespace osu_Beatmap_Editor
 
         private void ApplyToDifficulty()
         {
-            UpdateBeatmapProperties(selectedBeatmap);
+            UpdateBeatmapProperties(ref selectedBeatmap);
 
             selectedBeatmap.Save(selectedBeatmap.Filename);
         }
@@ -67,33 +81,34 @@ namespace osu_Beatmap_Editor
         private void SaveDifficultyAs()
         {
             // Create new instance of a beatmap based on an existing beatmap difficulty
-            Beatmap newBeatmap = new Beatmap(GetSelectedDifficultyPath());
+            Beatmap bm = new Beatmap(GetSelectedDifficultyPath());
 
             // Update properties with new values
-            UpdateBeatmapProperties(newBeatmap);
+            UpdateBeatmapProperties(ref bm);
+
+            // Check if BPM is different
+            double newBPM = (double)floatFieldBPM.Value;
+            if (bm.BPM != newBPM)
+            {
+                double bpmRatio = bm.BPM / newBPM;
+                ApplyNewBPM(selectedBeatmap, newBPM, bpmRatio);
+            }
 
             // Save
             string diffPath = GetSelectedDifficultyPath().Replace(difficultyPaths[lbDifficulties.SelectedIndex], "[" + tbDifficultyName.Text + "]");
-            
-            newBeatmap.Save(diffPath);
+
+            bm.Save(diffPath);
         }
 
-        private void UpdateBeatmapProperties(Beatmap beatmap)
+        private void UpdateBeatmapProperties(ref Beatmap bm)
         {
             // Set properties in selected beatmap difficulty:
-            beatmap.Version = tbDifficultyName.Text;
-            beatmap.Creator = tbCreator.Text;
-            beatmap.ApproachRate = (float)floatFieldAR.Value;
-            beatmap.OverallDifficulty = (float)floatFieldOD.Value;
-            beatmap.CircleSize= (float)floatFieldCS.Value;
-            beatmap.HPDrainRate = (float)floatFieldHP.Value;
-
-            // Check if BPM is different
-            float bpm = (float)floatFieldBPM.Value;
-            if (beatmap.BPM != bpm)
-            {
-                beatmap.BPM = bpm;
-            }
+            bm.Version = tbDifficultyName.Text;
+            bm.Creator = tbCreator.Text;
+            bm.ApproachRate = (float)floatFieldAR.Value;
+            bm.OverallDifficulty = (float)floatFieldOD.Value;
+            bm.CircleSize= (float)floatFieldCS.Value;
+            bm.HPDrainRate = (float)floatFieldHP.Value;
         }
 
         private void RemoveDifficulty()

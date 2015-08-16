@@ -31,6 +31,8 @@
             this.ofdSelectBeatmap = new System.Windows.Forms.OpenFileDialog();
             this.lblSelectedBeatmap = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.cbEncoding = new System.Windows.Forms.ComboBox();
             this.labelPropertyEditor = new System.Windows.Forms.Label();
             this.floatFieldHP = new System.Windows.Forms.NumericUpDown();
             this.cmdApply = new System.Windows.Forms.Button();
@@ -69,8 +71,6 @@
             this.cmdRemoveDifficulty = new System.Windows.Forms.Button();
             this.labelDifficulties = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.cbEncoding = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.floatFieldHP)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.floatFieldCS)).BeginInit();
@@ -124,6 +124,29 @@
             this.panel1.Size = new System.Drawing.Size(311, 233);
             this.panel1.TabIndex = 4;
             // 
+            // label1
+            // 
+            this.label1.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(163, 40);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(82, 23);
+            this.label1.TabIndex = 27;
+            this.label1.Text = "Encoding";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // cbEncoding
+            // 
+            this.cbEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbEncoding.FormattingEnabled = true;
+            this.cbEncoding.Items.AddRange(new object[] {
+            "MP3",
+            "WAV"});
+            this.cbEncoding.Location = new System.Drawing.Point(251, 40);
+            this.cbEncoding.Name = "cbEncoding";
+            this.cbEncoding.Size = new System.Drawing.Size(55, 21);
+            this.cbEncoding.TabIndex = 26;
+            // 
             // labelPropertyEditor
             // 
             this.labelPropertyEditor.AutoSize = true;
@@ -156,7 +179,6 @@
             // cmdApply
             // 
             this.cmdApply.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(47)))), ((int)(((byte)(47)))));
-            this.cmdApply.Enabled = false;
             this.cmdApply.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmdApply.ForeColor = System.Drawing.Color.White;
             this.cmdApply.Location = new System.Drawing.Point(159, 190);
@@ -285,7 +307,6 @@
             // cmdRevert
             // 
             this.cmdRevert.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(47)))), ((int)(((byte)(47)))));
-            this.cmdRevert.Enabled = false;
             this.cmdRevert.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmdRevert.ForeColor = System.Drawing.Color.White;
             this.cmdRevert.Location = new System.Drawing.Point(3, 190);
@@ -305,6 +326,7 @@
             this.tbCreator.Name = "tbCreator";
             this.tbCreator.Size = new System.Drawing.Size(199, 20);
             this.tbCreator.TabIndex = 8;
+            this.tbCreator.TextChanged += new System.EventHandler(this.tbCreator_TextChanged);
             // 
             // labelAR
             // 
@@ -326,6 +348,7 @@
             this.tbDifficultyName.Name = "tbDifficultyName";
             this.tbDifficultyName.Size = new System.Drawing.Size(199, 20);
             this.tbDifficultyName.TabIndex = 6;
+            this.tbDifficultyName.TextChanged += new System.EventHandler(this.tbDifficultyName_TextChanged);
             // 
             // labelHPDrain
             // 
@@ -578,29 +601,6 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(465, 121);
             this.panel2.TabIndex = 18;
-            // 
-            // cbEncoding
-            // 
-            this.cbEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbEncoding.FormattingEnabled = true;
-            this.cbEncoding.Items.AddRange(new object[] {
-            "MP3",
-            "WAV"});
-            this.cbEncoding.Location = new System.Drawing.Point(251, 40);
-            this.cbEncoding.Name = "cbEncoding";
-            this.cbEncoding.Size = new System.Drawing.Size(55, 21);
-            this.cbEncoding.TabIndex = 26;
-            // 
-            // label1
-            // 
-            this.label1.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(163, 40);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(82, 23);
-            this.label1.TabIndex = 27;
-            this.label1.Text = "Encoding";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // Form1
             // 

@@ -509,7 +509,7 @@ namespace BMAPI.v1
                             }
                             break;
                         default:
-                            if (f1.Name != "Format" && f1.Name != "Filename" && f1.Name != "BeatmapHash")
+                            if (f1.Name != "Format" && f1.Name != "Filename" && f1.Name != "BeatmapHash" && f1.Name != "SliderBorder")
                             {
                                 if (f1.GetValue(this) != null)
                                 {
@@ -631,11 +631,11 @@ namespace BMAPI.v1
                 return (ext.Equals(EncodingType.MP3.ToString()) ? EncodingType.MP3 : EncodingType.WAV);
             }
         }
-
-        public enum EncodingType
-        {
-            MP3 = 0,
-            WAV
-        };
     }
+
+    public enum EncodingType
+    {
+        MP3 = 0,
+        WAV
+    };
 }

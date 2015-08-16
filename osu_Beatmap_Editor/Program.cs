@@ -41,12 +41,14 @@ namespace osu_Beatmap_Editor
                 difficultyFolders = new List<string>(Directory.EnumerateFiles(beatmapFolders[i]).
                     Where(file => Path.GetExtension(file).Contains(".osu")));
 
+                /*
                 // Generate a list of Beatmap objects from the .osu files
                 for (int j = 0; j < difficultyFolders.Count; j++)
                 {
                     BMAPI.v1.Beatmap currentMap = new BMAPI.v1.Beatmap(difficultyFolders[j]);
                     difficulties.Add(currentMap);
                 }
+                 */
             }
         }
     }

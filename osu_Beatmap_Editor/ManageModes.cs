@@ -19,16 +19,7 @@ namespace osu_Beatmap_Editor
         public ManageModes()
         {
             InitializeComponent();
-        }
-
-        private void cmdProcessMaps_Click(object sender, EventArgs e)
-        {
-            if (Program.songsFolder != null)
-            {
-                Cursor.Current = Cursors.WaitCursor;
-                Program.ProcessBeatmaps();
-                cbModes.DataSource = Enum.GetValues(typeof(BMAPI.v1.GameMode));
-            }
+            cbModes.DataSource = Enum.GetValues(typeof(BMAPI.v1.GameMode));
         }
 
         private void cbModes_SelectedIndexChanged(object sender, EventArgs e)

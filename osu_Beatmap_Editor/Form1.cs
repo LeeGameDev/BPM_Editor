@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using BMAPI.v1;
 using BMAPI.v1.HitObjects;
+using BMAPI.v1.Events;
 
 namespace osu_Beatmap_Editor
 {
@@ -25,6 +26,9 @@ namespace osu_Beatmap_Editor
 
         private Color COLOUR_VALUE_CHANGED = Color.FromArgb(255, 21, 131, 178);
         private Color COLOUR_VALUE_DEFAULT = Color.FromArgb(255, 255, 255, 255);
+        
+        private double minBPM = 0;
+        private double maxBPM = 0;
 
         public Form1()
         {
@@ -90,8 +94,15 @@ namespace osu_Beatmap_Editor
 
             lblCreator.Text = "Mapped by " + selectedBeatmap.Creator;
 
-            lblBPMInfo.Text =
-                "BPM: " + string.Format("{0:0.0}", selectedBeatmap.BPM) +
+            // BPM: Min - Max
+            List<TimingPoint> timingPoints = new List<TimingPoint>(selectedBeatmap.TimingPoints.Where(tp => !tp.InheritsBPM));
+            minBPM = 60000 / timingPoints.Min(tp => tp.BpmDelay);
+            maxBPM = 60000 / timingPoints.Max(tp => tp.BpmDelay);
+            bool isSingleBPM = (maxBPM - minBPM == 0);
+            string bpmFormat = (isSingleBPM) ?
+                "BPM: " + string.Format("{0:0.0}", minBPM) :
+                "BPM: " + string.Format("{0:0.0} - {1:0.0}", minBPM, maxBPM);
+            lblBPMInfo.Text = bpmFormat +
                 "   Objects: " + selectedBeatmap.HitObjects.Count;
 
             int[] hitObjectsCount = UpdateHitObjectsCount(selectedBeatmap.HitObjects);
@@ -161,12 +172,12 @@ namespace osu_Beatmap_Editor
             if (tbSearch.Text == "")
             {
                 // display all beatmap folders
-                beatmapNames = Program.beatmapFolders;
+                beatmapNames = GetBeatmapFolderNames(Program.beatmapFolders);
             }
             else
             {
                 // display all beatmap folders containing the text in the search textbox
-                beatmapNames = Program.beatmapFolders.FindAll(folder => folder.ToLower().Contains(tbSearch.Text.ToLower()));
+                beatmapNames = GetBeatmapFolderNames(Program.beatmapFolders).FindAll(folder => folder.ToLower().Contains(tbSearch.Text.ToLower()));
             }
             // reset the datasource
             lbBeatmaps.DataSource = beatmapNames;
@@ -258,7 +269,7 @@ namespace osu_Beatmap_Editor
                 Cursor.Current = Cursors.WaitCursor;
                 Program.songsFolder = fbdSongs.SelectedPath;
                 Program.ProcessBeatmaps();
-                ProcessSongsFolder(Program.songsFolder);
+                ProcessSongsFolder();
             }
         }
         private void openInWindowsExplorerToolStripMenuItem_Click(object sender, EventArgs e)
@@ -273,7 +284,6 @@ namespace osu_Beatmap_Editor
         {
             Application.Exit();
         }
-
         private void manageModesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ManageModes mmForm = new ManageModes();
@@ -284,26 +294,38 @@ namespace osu_Beatmap_Editor
         {
             return Path.GetTempPath() + Guid.NewGuid() + ext;
         }
-
-        private void cmdTestSoundStretcher_Click(object sender, EventArgs e)
+        public static void CopyFile(string src, string dst)
         {
+            using (FileStream srcStream = new FileStream(src, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (FileStream dstStream = new FileStream(dst, FileMode.Create))
+            {
+                srcStream.CopyTo(dstStream);
+            }
+        }
+
+        public void ApplyNewBPM(Beatmap bm, double newBPM, double bpmRatio)
+        {
+            ProcessBPMChanges(bm, newBPM, bpmRatio);
+
             // Copy the original file
             string selectedSongPath = GetSelectedSongPath() + Path.DirectorySeparatorChar;
-            string audioExt = selectedBeatmap.AudioFilename.Substring(selectedBeatmap.AudioFilename.LastIndexOf('.'));
+            string audioExt = bm.AudioFilename.Substring(bm.AudioFilename.LastIndexOf('.'));
 
             string tempDecoded = GetTempPath(".wav");
             string tempStretched = GetTempPath(".wav");
             string tempEncoded = GetTempPath(".mp3");
+            string newAudioFilename = "";
 
-            double bpmRatio = selectedBeatmap.BPM / (float)floatFieldBPM.Value;
             double tempo = (Math.Pow(bpmRatio, -1) - 1) * 100;
 
             Process p = new Process();
+
+            // Decode mp3 to wav
             p.StartInfo.RedirectStandardOutput = true;
             p.StartInfo.CreateNoWindow = false;
             p.StartInfo.UseShellExecute = false;
             p.StartInfo.FileName = "lame.exe";
-            p.StartInfo.Arguments = string.Format("--decode \"{0}\" \"{1}\"", selectedSongPath + selectedBeatmap.AudioFilename, tempDecoded);
+            p.StartInfo.Arguments = string.Format("--decode \"{0}\" \"{1}\"", selectedSongPath + bm.AudioFilename, tempDecoded);
             p.Start();
             p.WaitForExit();
 
@@ -313,24 +335,94 @@ namespace osu_Beatmap_Editor
             p.Start();
             p.WaitForExit();
 
-            CopyFile(tempStretched, selectedSongPath + tbDifficultyName.Text + ".wav");
+            if (cbEncoding.SelectedIndex == (int)EncodingType.MP3)
+            {
+                // Encode wav as mp3
+                p.StartInfo.FileName = "lame.exe";
+                p.StartInfo.Arguments = string.Format("\"{0}\" \"{1}\"", tempStretched, tempEncoded);
+                p.Start();
+                p.WaitForExit();
 
-            // Encode as mp3
-            p.StartInfo.FileName = "lame.exe";
-            p.StartInfo.Arguments = string.Format("\"{0}\" \"{1}\"", tempStretched, tempEncoded);
-            p.Start();
-            p.WaitForExit();
+                // Create a copy of the final audio file
+                newAudioFilename = selectedSongPath + tbDifficultyName.Text + "_" + newBPM + ".mp3";
+                CopyFile(tempEncoded, newAudioFilename);
 
-            CopyFile(tempEncoded, selectedSongPath + tbDifficultyName.Text + ".mp3");
+                // Cleanup
+                File.Delete(tempEncoded);   // .wav->.mp3
+            }
+            else
+            {
+                // Create a copy of the final audio file
+                newAudioFilename = selectedSongPath + tbDifficultyName.Text + "_" + newBPM + ".wav";
+                CopyFile(tempStretched, newAudioFilename);
+            }
+
+            bm.AudioFilename = newAudioFilename;
+
+            string newFilename = bm.Filename.Substring(0, bm.Filename.LastIndexOf('[')) + "[" + tbDifficultyName.Text + "].osu";
+            bm.Save(newFilename);
+
+            // Cleanup
+            File.Delete(tempDecoded);       // .mp3->.wav
+            File.Delete(tempStretched);     // .wav->.wav
+        }
+        private void ProcessBPMChanges(Beatmap bm, double newBPM, double bpmRatio)
+        {
+            // Process TimingPoints
+            ProcessTimingPoints(bm.TimingPoints, newBPM, bpmRatio);
+
+            // Process Events
+            ProcessEvents(bm.Events, bpmRatio);
+
+            // Process hitobjects
+            ProcessHitObjects(bm.HitObjects, bpmRatio);
+        }
+        private void ProcessTimingPoints(List<TimingPoint> timingPoints, double newBPM, double bpmRatio)
+        {
+            foreach (TimingPoint tp in timingPoints)
+            {
+                if (tp.InheritsBPM == false)
+                {
+                    float newDelay = 60000 / (float)newBPM;
+                    tp.BpmDelay = newDelay;
+                    tp.Time = (int)(tp.Time * bpmRatio);
+                }
+            }
+        }
+        private void ProcessEvents(List<EventBase> events, double bpmRatio)
+        {
+            foreach (EventBase e in selectedBeatmap.Events)
+            {
+                e.StartTime = (int)(e.StartTime * bpmRatio);
+                if (e.GetType() == typeof(BreakEvent))
+                {
+                    ((BreakEvent)e).EndTime = (int)(((BreakEvent)e).EndTime * bpmRatio);
+                }
+            }
+        }
+        private void ProcessHitObjects(List<CircleObject> hitObjects, double bpmRatio)
+        {
+            foreach (CircleObject hitObject in hitObjects)
+            {
+                hitObject.StartTime = (int)(hitObject.StartTime * bpmRatio);
+                if (hitObject.GetType() == typeof(SpinnerObject))
+                {
+                    ((SpinnerObject)hitObject).EndTime = (int)(((SpinnerObject)hitObject).EndTime * bpmRatio);
+                }
+            }
         }
 
-        public static void CopyFile(string src, string dst)
+        private void tbDifficultyName_TextChanged(object sender, EventArgs e)
         {
-            using (FileStream srcStream = new FileStream(src, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            using (FileStream dstStream = new FileStream(dst, FileMode.Create))
-            {
-                srcStream.CopyTo(dstStream);
-            }
+            TextBoxFieldChanged((TextBox)sender, selectedBeatmap.Version);
+        }
+        private void tbCreator_TextChanged(object sender, EventArgs e)
+        {
+            TextBoxFieldChanged((TextBox)sender, selectedBeatmap.Creator);
+        }
+        private void TextBoxFieldChanged(TextBox sender, string defaultValue)
+        {
+            sender.ForeColor = (sender.Text == defaultValue) ? COLOUR_VALUE_DEFAULT : COLOUR_VALUE_CHANGED;
         }
     }
 }
